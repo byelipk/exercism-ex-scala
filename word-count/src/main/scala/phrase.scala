@@ -1,13 +1,15 @@
-class Phrase(phrase: String) {
+class Phrase(text: String) {
+
+  val splitPhrase = text.split("""(\s+|,)""")
+
+  val cleanPhrase = splitPhrase map { w =>
+    w.toLowerCase.replaceAll("""[^\w']""", "")
+  }
+
+  val filteredPhrase = cleanPhrase filter (w => w.isEmpty == false)
 
   def wordCount: Map[String, Int] = {
-    val emptyMap = Map[String, Int]()
-
-    phrase.split("""(\s+|,)""").map { s =>
-      s.toLowerCase.replaceAll("""[^\w']""", "")
-    }.filter { s =>
-      s.isEmpty == false
-    }.foldLeft(emptyMap) { (m, k) =>
+    filteredPhrase.foldLeft(Map[String, Int]()) { (m, k) =>
       if (m.getOrElse(k, false) != false) m + (k -> (m(k) + 1))
       else m + (k -> 1)
     }
